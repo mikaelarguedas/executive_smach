@@ -432,15 +432,19 @@ class SimpleActionState(State):
         """Goal Feedback Callback"""
         rospy.logdebug("Action "+self._action_name+" sent feedback.")
         if self._feedback_cb is not None:
-            self._feedback_cb(
-                smach.Remapper(
-                    self._ud,
-                    self._feedback_cb_input_keys,
-                    self._feedback_cb_output_keys,
-                    []),
-                feedback,
-                *self._feedback_cb_args,
-                **self._feedback_cb_kwargs)
+            try:
+                self._feedback_cb(
+                    smach.Remapper(
+                        self._ud,
+                        self._feedback_cb_input_keys,
+                        self._feedback_cb_output_keys,
+                        []),
+                    feedback,
+                    *self._feedback_cb_args,
+                    **self._feedback_cb_kwargs)
+            except:
+                rospy.logerr("Could not execute feedback callback: "+traceback.format_exc())
+                self._action_client.cancel_goal()
 
     def _goal_done_cb(self, result_state, result):
         """Goal Done Callback
