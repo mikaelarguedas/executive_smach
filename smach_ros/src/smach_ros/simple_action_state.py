@@ -15,7 +15,7 @@ __all__ = ['SimpleActionState']
 
 class SimpleActionState(State):
     """Simple action client state.
-    
+
     Use this class to represent an actionlib as a state in a state machine.
     """
 
@@ -29,8 +29,8 @@ class SimpleActionState(State):
     def __init__(self,
             # Action info
             action_name,
-            action_spec, 
-            # Default goal 
+            action_spec,
+            # Default goal
             goal = None,
             goal_key = None,
             goal_slots = [],
@@ -57,7 +57,7 @@ class SimpleActionState(State):
             server_wait_timeout = rospy.Duration(60.0)
             ):
         """Constructor for SimpleActionState action client wrapper.
-        
+
         @type action_name: string
         @param action_name: The name of the action as it will be broadcast over ros.
 
@@ -74,7 +74,7 @@ class SimpleActionState(State):
 
         @type goal_slots: list of string
         @param goal_slots: Pull the goal fields (__slots__) from like-named
-        keys in userdata. This will be done before calling the goal_cb if 
+        keys in userdata. This will be done before calling the goal_cb if
         goal_cb is defined.
 
         @type goal_cb: callable
@@ -113,7 +113,7 @@ class SimpleActionState(State):
         @type exec_timeout: C{rospy.Duration}
         @param exec_timeout: This is the timeout used for sending a preempt message
         to the delegate action. This is C{None} by default, which implies no
-        timeout. 
+        timeout.
 
         @type preempt_timeout: C{rospy.Duration}
         @param preempt_timeout: This is the timeout used for aborting after a
@@ -176,7 +176,7 @@ class SimpleActionState(State):
         else:
             self._goal_cb_input_keys = input_keys
             self._goal_cb_output_keys = output_keys
-            
+
         # Feedback callback
         if feedback_cb and not hasattr(feedback_cb, '__call__'):
             raise smach.InvalidStateError("Feedback callback object given to SimpleActionState that IS NOT a function object")
@@ -192,7 +192,7 @@ class SimpleActionState(State):
         else:
             self._feedback_cb_input_keys = input_keys
             self._feedback_cb_output_keys = output_keys
-   
+
         # Set result processing policy
         if result_cb and not hasattr(result_cb, '__call__'):
             raise smach.InvalidStateError("Result callback object given to SimpleActionState that IS NOT a function object")
@@ -251,7 +251,7 @@ class SimpleActionState(State):
         """Internal method for waiting for the action server
         This is run in a separate thread and allows construction of this state
         to not block the construction of other states.
-        """        
+        """
         timeout_time = rospy.get_rostime() + self._server_wait_timeout
         while self._status == SimpleActionState.WAITING_FOR_SERVER and not rospy.is_shutdown() and not rospy.get_rostime() >= timeout_time:
             try:
@@ -343,7 +343,7 @@ class SimpleActionState(State):
             except:
                 rospy.logerr("Could not execute goal callback: "+traceback.format_exc())
                 return 'aborted'
-            
+
         # Make sure the necessary paramters have been set
         if self._goal is None and self._goal_cb is None:
             rospy.logerr("Attempting to activate action "+self._action_name+" with no goal or goal callback set. Did you construct the SimpleActionState properly?")
